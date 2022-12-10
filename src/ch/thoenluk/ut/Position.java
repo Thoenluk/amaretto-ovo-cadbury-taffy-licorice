@@ -1,15 +1,20 @@
 package ch.thoenluk.ut;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 public record Position(int y, int x) {
 
     public int getDistanceFrom(Position other) {
         return Math.abs(x() - other.x())
                 + Math.abs(y() - other.y());
+    }
+
+    public int getRoleplayingDistanceFrom(Position other) {
+        return Math.max(
+                Math.abs(x() - other.x()),
+                Math.abs(y() - other.y())
+        );
     }
 
     public List<Position> getNeighbours(NeighbourDirection neighbourDirection) {
@@ -40,10 +45,6 @@ public record Position(int y, int x) {
 
         /* private */ NeighbourDirection(List<Position> directions) {
             this.directions = directions;
-        }
-
-        private static int[] dir(int y, int x) {
-            return new int[]{y, x};
         }
 
         public List<Position> getDirections() {
