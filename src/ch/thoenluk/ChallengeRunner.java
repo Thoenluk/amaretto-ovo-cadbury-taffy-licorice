@@ -29,7 +29,6 @@ public class ChallengeRunner {
 
         final int selectedChallenge = getSelectedChallengeFromUser(challengeFolders.length);
 
-
         testAndRunChristmasSaver(challengeFolders[selectedChallenge], selectedChallenge);
     }
 
