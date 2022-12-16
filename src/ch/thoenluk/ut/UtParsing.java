@@ -47,6 +47,21 @@ public class UtParsing {
         return parsedList;
     }
 
+    public static Map<Position, Character> multilineStringToPositionCharacterMap(String stringRepresentation) {
+        Map<Position, Character> map = new HashMap<>();
+        int y, x;
+
+        String[] lines = UtStrings.splitMultilineString(stringRepresentation);
+
+        for (y = 0; y < lines.length; y++) {
+            for (x = 0; x < lines[y].length(); x++) {
+                map.put(new Position(y, x), lines[y].charAt(x));
+            }
+        }
+
+        return map;
+    }
+
     public static Map<Position, Integer> multilineStringToPositionIntegerMap(String stringRepresentation) {
         Map<Position, Integer> map = new HashMap<>();
         int y, x;
