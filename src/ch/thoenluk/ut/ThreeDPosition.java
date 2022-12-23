@@ -1,8 +1,23 @@
 package ch.thoenluk.ut;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.UnaryOperator;
 
 public record ThreeDPosition(int x, int y, int z) {
+
+    public static ThreeDPosition fromString(String description) {
+        final String[] coordinates = UtStrings.splitCommaSeparatedString(description);
+        return new ThreeDPosition(UtParsing.cachedParseInt(coordinates[0]), UtParsing.cachedParseInt(coordinates[1]), UtParsing.cachedParseInt(coordinates[2]));
+    }
+
+    public List<ThreeDPosition> getNeighbours(NeighbourDirection direction) {
+        final List<ThreeDPosition> neighbours = new ArrayList<>();
+        for (ThreeDPosition offset : direction.getOffsets()) {
+            neighbours.add(this.add(offset));
+        }
+        return neighbours;
+    }
 
     public int getDistanceFrom(ThreeDPosition other) {
         return Math.abs(x() - other.x())
@@ -128,6 +143,27 @@ public record ThreeDPosition(int x, int y, int z) {
                     return position -> new ThreeDPosition(-1 * position.x(), -1 * position.y(), -1 * position.z());
                 }
             }
+        }
+    }
+
+    public enum NeighbourDirection {
+        CARDINAL(List.of(
+                new ThreeDPosition(-1, 0, 0),
+                new ThreeDPosition(1, 0, 0),
+                new ThreeDPosition(0, -1, 0),
+                new ThreeDPosition(0, 1, 0),
+                new ThreeDPosition(0, 0, -1),
+                new ThreeDPosition(0, 0, 1)
+        ));
+
+        private final List<ThreeDPosition> offsets;
+
+        /* private */ NeighbourDirection(List<ThreeDPosition> offsets) {
+            this.offsets = offsets;
+        }
+
+        public List<ThreeDPosition> getOffsets() {
+            return offsets;
         }
     }
 }
