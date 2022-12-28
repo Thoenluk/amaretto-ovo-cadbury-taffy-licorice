@@ -78,9 +78,10 @@ public record Position(int y, int x) {
 
     public enum NeighbourDirection {
         CARDINAL(List.of(new Position(-1, 0), new Position(0, -1), new Position(0, 1), new Position(1, 0))),
+        CARDINAL_AND_SELF(List.of(new Position(-1, 0), new Position(0, -1), new Position(0, 1), new Position(1, 0), new Position(0, 0))),
         DIAGONAL(List.of(new Position(-1, -1), new Position(-1, 1), new Position(1, -1), new Position(1, 1))),
         OMNIDIRECTIONAL(List.of(new Position(-1, -1), new Position(-1, 0), new Position(-1, 1),
-                                new Position(0, -1),                            new Position(0, 1),
+                                new Position(0, -1),                           new Position(0, 1),
                                 new Position(1, -1), new Position(1, 0), new Position(1, 1)
         )),
         OMNIDIRECTIONAL_AND_SELF(List.of(new Position(-1, -1), new Position(-1, 0), new Position(-1, 1),

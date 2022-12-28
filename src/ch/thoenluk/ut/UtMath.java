@@ -24,6 +24,10 @@ public class UtMath {
     }
 
     public static int wrap(int number, int borderToWrapOn) {
+        while (number < 1) {
+            number += borderToWrapOn;
+        }
+
         number -= 1;
         number %= borderToWrapOn;
         number += 1;
