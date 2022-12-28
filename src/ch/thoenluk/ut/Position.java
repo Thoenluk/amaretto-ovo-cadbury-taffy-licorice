@@ -39,6 +39,14 @@ public record Position(int y, int x) {
         return new Position(this.y + offset.y(), this.x + offset.x());
     }
 
+    public List<Position> offsetBy(List<Position> offsets) {
+        final List<Position> offsetPositions = new LinkedList<>();
+        for (Position offset : offsets) {
+            offsetPositions.add(offsetBy(offset));
+        }
+        return offsetPositions;
+    }
+
     public List<Position> getPathTo(Position other) {
         final List<Position> path = new LinkedList<>();
         final Position offset = new Position(other.y() - y(), other.x() - x());
