@@ -12,6 +12,17 @@ public class UtMath {
         return result;
     }
 
+    public static long superOverflowSafeSum(long... summands) {
+        long result = 0;
+        for (long summand : summands) {
+            if (Long.MAX_VALUE - result < summand) {
+                throw new AssertionError();
+            }
+            result += summand;
+        }
+        return result;
+    }
+
     public static int overflowSafeProduct(int... multiplicands) {
         int result = 1;
         for (int multiplicand : multiplicands) {
