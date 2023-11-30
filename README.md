@@ -1,6 +1,6 @@
 # aoc-thoenluk-2022
 
-This repository serves as version control and distribution method for my solutions to the Advent of Code 2022 challenges. (https://adventofcode.com/)
+This repository serves as version control and distribution method for my solutions to the Advent of Code ~~2022~~ challenges. (https://adventofcode.com/)
 
 I write all my solutions in Java, as it is my most practiced and favorite to work with.
 
