@@ -35,6 +35,14 @@ public record Position(int y, int x) {
         return neighbours;
     }
 
+    public List<Position> getOmnidirectionalNeighbours() {
+        return getNeighbours(NeighbourDirection.OMNIDIRECTIONAL);
+    }
+
+    public Position offsetBy(final int y, final int x) {
+        return offsetBy(new Position(y, x));
+    }
+
     public Position offsetBy(Position offset) {
         return new Position(this.y + offset.y(), this.x + offset.x());
     }
