@@ -1,5 +1,8 @@
 package ch.thoenluk.ut;
 
+import java.util.Arrays;
+import java.util.stream.Stream;
+
 public class UtStrings {
 
 
@@ -24,6 +27,10 @@ public class UtStrings {
 
     public static String[] splitMultilineString(String multiline) {
         return multiline.replaceAll(NEWLINE_REGEX, "\n").split("\n");
+    }
+
+    public static Stream<String> streamInputAsLines(String input) {
+        return Arrays.stream(splitMultilineString(input));
     }
 
     public static String[] splitStringWithEmptyLines(String emptyLineSeparatedString) {

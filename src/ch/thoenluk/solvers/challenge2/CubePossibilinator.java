@@ -5,8 +5,6 @@ import ch.thoenluk.ut.UtMath;
 import ch.thoenluk.ut.UtParsing;
 import ch.thoenluk.ut.UtStrings;
 
-import java.util.Arrays;
-import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.IntStream;
 
@@ -16,13 +14,10 @@ public class CubePossibilinator implements ChristmasSaver {
 
     @Override
     public String saveChristmas(String input) {
-        return Arrays.stream(UtStrings.splitMultilineString(input))
+        return UtMath.restOfTheOwl(UtStrings.streamInputAsLines(input)
                 .map(Game::fromString)
                 .filter(this::isPossible)
-                .map(Game::id)
-                .reduce(UtMath::overflowSafeSum)
-                .orElseThrow()
-                .toString();
+                .map(Game::id));
     }
 
     private boolean isPossible(Game game) {
@@ -33,12 +28,9 @@ public class CubePossibilinator implements ChristmasSaver {
 
     @Override
     public String saveChristmasAgain(String input) {
-        return Arrays.stream(UtStrings.splitMultilineString(input))
+        return UtMath.restOfTheOwl(UtStrings.streamInputAsLines(input)
                 .map(Game::fromString)
-                .map(Game::power)
-                .reduce(UtMath::overflowSafeSum)
-                .orElseThrow()
-                .toString();
+                .map(Game::power));
     }
 
     private record Game(int id, int red, int green, int blue) {

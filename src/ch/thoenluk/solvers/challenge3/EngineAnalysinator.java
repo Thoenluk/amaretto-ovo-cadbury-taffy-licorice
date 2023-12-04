@@ -21,12 +21,9 @@ public class EngineAnalysinator implements ChristmasSaver {
         IntStream.range(0, lines.length)
                 .mapToObj(y -> new Line(y, lines[y]))
                 .forEach(this::insertIntoSchematic);
-        return IntStream.range(0, lines.length)
+        return UtMath.restOfTheOwl(IntStream.range(0, lines.length)
                 .mapToObj(y -> new Line(y, lines[y]))
-                .map(this::mapToPartNumberSum)
-                .reduce(UtMath::overflowSafeSum)
-                .orElseThrow()
-                .toString();
+                .map(this::mapToPartNumberSum));
     }
 
     private void insertIntoSchematic(final Line line) {
@@ -98,12 +95,9 @@ public class EngineAnalysinator implements ChristmasSaver {
                 .mapToObj(y -> new Line(y, lines[y]))
                 .forEach(this::insertIntoGearRatios);
 
-        return gearRatios.values().stream()
+        return UtMath.restOfTheOwl(gearRatios.values().stream()
                 .filter(l -> l.size() == 2)
-                .map(l -> UtMath.overflowSafeProduct(l.get(0), l.get(1)))
-                .reduce(UtMath::overflowSafeSum)
-                .orElseThrow()
-                .toString();
+                .map(l -> UtMath.overflowSafeProduct(l.get(0), l.get(1))));
     }
 
     private void insertIntoGearRatios(final Line line) {

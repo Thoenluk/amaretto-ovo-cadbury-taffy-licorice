@@ -1,5 +1,8 @@
 package ch.thoenluk.ut;
 
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
+
 public class UtMath {
     public static int overflowSafeSum(int... summands) {
         int result = 0;
@@ -43,5 +46,15 @@ public class UtMath {
         number %= borderToWrapOn;
         number += 1;
         return number;
+    }
+
+    public static String restOfTheOwl(Stream<Integer> stream) {
+        return stream.reduce(UtMath::overflowSafeSum)
+                .orElseThrow()
+                .toString();
+    }
+
+    public static String restOfTheOwl(IntStream stream) {
+        return restOfTheOwl(stream.boxed());
     }
 }

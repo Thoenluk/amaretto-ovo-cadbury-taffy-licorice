@@ -1,9 +1,10 @@
 package ch.thoenluk.solvers.challenge1;
 
 import ch.thoenluk.ChristmasSaver;
+import ch.thoenluk.ut.UtMath;
+import ch.thoenluk.ut.UtParsing;
 import ch.thoenluk.ut.UtStrings;
 
-import java.util.Arrays;
 import java.util.Map;
 
 public class TrebuchetCalibratinator implements ChristmasSaver {
@@ -23,12 +24,9 @@ public class TrebuchetCalibratinator implements ChristmasSaver {
 
     @Override
     public String saveChristmas(String input) {
-        return Arrays.stream(UtStrings.splitMultilineString(input))
+        return UtMath.restOfTheOwl(UtStrings.streamInputAsLines(input)
                 .map(this::getCalibrationValue)
-                .map(Integer::parseInt)
-                .reduce(Integer::sum)
-                .orElseThrow()
-                .toString();
+                .map(UtParsing::cachedParseInt));
     }
 
     private String getCalibrationValue(final String line) {
@@ -38,13 +36,10 @@ public class TrebuchetCalibratinator implements ChristmasSaver {
 
     @Override
     public String saveChristmasAgain(String input) {
-        return Arrays.stream(UtStrings.splitMultilineString(input))
+        return UtMath.restOfTheOwl(UtStrings.streamInputAsLines(input)
                 .map(this::replaceNumberWordsWithDigits)
                 .map(this::getCalibrationValue)
-                .map(Integer::parseInt)
-                .reduce(Integer::sum)
-                .orElseThrow()
-                .toString();
+                .map(UtParsing::cachedParseInt));
     }
 
     private String replaceNumberWordsWithDigits(final String line) {
