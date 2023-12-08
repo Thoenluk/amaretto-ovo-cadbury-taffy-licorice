@@ -37,6 +37,17 @@ public class UtMath {
         return result;
     }
 
+    public static long superOverflowSafeProduct(long... multiplicands) {
+        long result = 1;
+        for (long multiplicand : multiplicands) {
+            if (Long.MAX_VALUE / result <= multiplicand) {
+                throw new AssertionError("Product would overflow! Use a long instead.");
+            }
+            result *= multiplicand;
+        }
+        return result;
+    }
+
     public static int wrap(int number, int borderToWrapOn) {
         while (number < 1) {
             number += borderToWrapOn;

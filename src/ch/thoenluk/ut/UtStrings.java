@@ -8,6 +8,7 @@ public class UtStrings {
 
     public static final String WHITE_SPACE_REGEX = "[\\s\\n\\r]+";
     public static final String NEWLINE_REGEX = "\\r?\\n";
+    public static final String NUMBERS_REGEX = "\\d+";
 
     public static String[] splitCommaSeparatedString(String csv) {
         return csv.replaceAll(NEWLINE_REGEX, "").split(",");
