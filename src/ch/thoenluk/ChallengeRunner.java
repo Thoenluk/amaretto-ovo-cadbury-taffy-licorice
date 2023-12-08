@@ -4,6 +4,7 @@ import ch.thoenluk.ut.UtStrings;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Objects;
@@ -95,31 +96,29 @@ public class ChallengeRunner {
     }
 
     // I do not fear what this method does; I fear what kind of further automation I'll think up next year.
-    private static ChristmasSaver getChristmasSaverForChallenge(int challenge) throws Exception {
+    // 2023 update: I was correct to fear.
+    private static ChristmasSaver getChristmasSaverForChallenge(int challenge) {
         final File challengeClassFolder = new File(".\\src\\ch\\thoenluk\\solvers\\challenge" + challenge);
 
         if (!challengeClassFolder.isDirectory()) throw new AssertionError();
 
-        final File[] potentialChallengeClasses = challengeClassFolder.listFiles(file -> file.isFile() && file.getName().endsWith(".java"));
-
-        if ((Objects.requireNonNull(potentialChallengeClasses).length != 1)) throw new AssertionError();
-
-        final String challengeClassPath = potentialChallengeClasses[0].getPath();
-        
-        final String challengeClassPackageName = 
-                challengeClassPath.substring(6, challengeClassPath.length() - 5)
-                        .replaceAll("\\\\", ".");
-        final Class<? extends ChristmasSaver> challengeClass;
-        try {
-            challengeClass = Class.forName(challengeClassPackageName).asSubclass(ChristmasSaver.class);
-        } catch (ClassNotFoundException e) {
-            throw new ClassNotFoundException("Could not find Christmas saver for this challenge :<", e);
-        }
-        try {
-            return challengeClass.getConstructor().newInstance();
-        } catch (Exception e) {
-            throw new Exception("Could not construct Christmas saver for this challenge :<", e);
-        }
+        return Arrays.stream(Objects.requireNonNull(challengeClassFolder.listFiles(file -> file.isFile() && file.getName().endsWith(".java"))))
+                .map(File::getPath)
+                .map(path -> path.substring(6, path.length() - 5).replaceAll("\\\\", "."))
+                .map(name -> {
+                    try { return Class.forName(name); }
+                    catch (ClassNotFoundException e) { throw new AssertionError(e); }
+                })
+                .filter(ChristmasSaver.class::isAssignableFrom)
+                .map(aClass -> {
+                    try {
+                        return aClass.asSubclass(ChristmasSaver.class).getConstructor().newInstance();
+                    } catch (ClassCastException | InstantiationException | IllegalAccessException | InvocationTargetException | NoSuchMethodException e) {
+                        throw new AssertionError(e);
+                    }
+                })
+                .findFirst()
+                .orElseThrow();
     }
 
     private static void testChristmasSaver(File challengeFolder, UnaryOperator<String> savingMethod, String challengeSuffix) throws IOException {
