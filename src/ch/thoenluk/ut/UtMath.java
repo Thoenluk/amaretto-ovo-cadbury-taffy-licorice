@@ -1,5 +1,8 @@
 package ch.thoenluk.ut;
 
+import java.util.Collection;
+import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
@@ -57,6 +60,30 @@ public class UtMath {
         number %= borderToWrapOn;
         number += 1;
         return number;
+    }
+
+    public static long gcd(long a, long b) {
+        if (b == 0) {
+            return a;
+        }
+        if (a < b) {
+            final long holder = a;
+            a = b;
+            b = holder;
+        }
+        return gcd(b, a % b);
+    }
+
+    public static long gcd(final List<Long> numbers) {
+        return numbers.stream().reduce(numbers.get(0), UtMath::gcd);
+    }
+
+    public static long lcm(long a, long b) {
+        return a * (b / gcd(a, b));
+    }
+
+    public static long lcm(final List<Long> numbers) {
+        return numbers.stream().reduce(numbers.get(0), UtMath::lcm);
     }
 
     public static String restOfTheOwl(Stream<Integer> stream) {
