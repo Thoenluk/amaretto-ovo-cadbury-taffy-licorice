@@ -5,6 +5,17 @@ import java.util.List;
 
 public record Position(int y, int x) {
 
+    public static Position UP = new Position(-1, 0);
+    public static Position DOWN = new Position(1, 0);
+    public static Position LEFT = new Position(0, -1);
+    public static Position RIGHT = new Position(0, 1);
+    public static Position UP_LEFT = new Position(-1, -1);
+    public static Position UP_RIGHT = new Position(-1, 1);
+    public static Position DOWN_LEFT = new Position(1, -1);
+    public static Position DOWN_RIGHT = new Position(1, 1);
+    public static Position SELF = new Position(0, 0);
+
+
     //---- Static Methods
 
     public static Position fromString(String description) {
@@ -33,6 +44,10 @@ public record Position(int y, int x) {
             neighbours.add(offsetBy(direction));
         }
         return neighbours;
+    }
+
+    public List<Position> getCardinalNeighbours() {
+        return getNeighbours(NeighbourDirection.CARDINAL);
     }
 
     public List<Position> getOmnidirectionalNeighbours() {
@@ -85,16 +100,16 @@ public record Position(int y, int x) {
     //---- Inner enum
 
     public enum NeighbourDirection {
-        CARDINAL(List.of(new Position(-1, 0), new Position(0, -1), new Position(0, 1), new Position(1, 0))),
-        CARDINAL_AND_SELF(List.of(new Position(-1, 0), new Position(0, -1), new Position(0, 1), new Position(1, 0), new Position(0, 0))),
-        DIAGONAL(List.of(new Position(-1, -1), new Position(-1, 1), new Position(1, -1), new Position(1, 1))),
-        OMNIDIRECTIONAL(List.of(new Position(-1, -1), new Position(-1, 0), new Position(-1, 1),
-                                new Position(0, -1),                           new Position(0, 1),
-                                new Position(1, -1), new Position(1, 0), new Position(1, 1)
+        CARDINAL(List.of(UP, LEFT, RIGHT, DOWN)),
+        CARDINAL_AND_SELF(List.of(UP, LEFT, RIGHT, DOWN, SELF)),
+        DIAGONAL(List.of(UP_LEFT, UP_RIGHT, DOWN_LEFT, DOWN_RIGHT)),
+        OMNIDIRECTIONAL(List.of(UP_LEFT, UP, UP_RIGHT,
+                                LEFT,           RIGHT,
+                                DOWN_LEFT, DOWN, DOWN_RIGHT
         )),
-        OMNIDIRECTIONAL_AND_SELF(List.of(new Position(-1, -1), new Position(-1, 0), new Position(-1, 1),
-                                        new Position(0, -1), new Position(0, 0), new Position(0, 1),
-                                        new Position(1, -1), new Position(1, 0), new Position(1, 1)
+        OMNIDIRECTIONAL_AND_SELF(List.of(UP_LEFT, UP, UP_RIGHT,
+                                        LEFT, SELF, RIGHT,
+                                        DOWN_LEFT, DOWN, DOWN_RIGHT
         ));
 
         private final List<Position> directions;

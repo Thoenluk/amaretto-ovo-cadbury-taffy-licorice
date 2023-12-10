@@ -18,10 +18,14 @@ public class OASISInator implements ChristmasSaver {
     }
 
     private long getNextValue(final List<Long> sequence) {
-        if (sequence.stream().allMatch(value -> value == 0)) {
+        if (isAllZeroes(sequence)) {
             return 0;
         }
         return sequence.get(sequence.size() - 1) + getNextValue(generateDifferences(sequence));
+    }
+
+    private boolean isAllZeroes(List<Long> sequence) {
+        return sequence.stream().allMatch(value -> value == 0);
     }
 
     @Override
@@ -34,7 +38,7 @@ public class OASISInator implements ChristmasSaver {
     }
 
     private long getPreviousValue(final List<Long> sequence) {
-        if (sequence.stream().allMatch(value -> value == 0)) {
+        if (isAllZeroes(sequence)) {
             return 0;
         }
         return sequence.get(0) - getPreviousValue(generateDifferences(sequence));
