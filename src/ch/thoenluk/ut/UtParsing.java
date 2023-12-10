@@ -1,9 +1,6 @@
 package ch.thoenluk.ut;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class UtParsing {
     private static final Map<String, Integer> STRING_INTEGER_CACHE = new HashMap<>();
@@ -84,5 +81,11 @@ public class UtParsing {
             parsedList.add(cachedParseInt(token));
         }
         return parsedList;
+    }
+
+    public static List<Long> whitespaceSeparatedStringToLongList(String wss) {
+        return Arrays.stream(wss.split(UtStrings.WHITE_SPACE_REGEX))
+                .map(UtParsing::cachedParseLong)
+                .toList();
     }
 }

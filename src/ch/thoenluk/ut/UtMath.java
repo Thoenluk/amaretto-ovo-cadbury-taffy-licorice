@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.LongStream;
 import java.util.stream.Stream;
 
 public class UtMath {
@@ -21,8 +22,8 @@ public class UtMath {
     public static long superOverflowSafeSum(long... summands) {
         long result = 0;
         for (long summand : summands) {
-            if (Long.MAX_VALUE - result < summand) {
-                throw new AssertionError();
+            if (summand > 0 && result > 0 && Long.MAX_VALUE - result < summand) {
+                throw new AssertionError(String.format("Would overflow for result %d and summand %d!", result, summand));
             }
             result += summand;
         }
@@ -94,5 +95,15 @@ public class UtMath {
 
     public static String restOfTheOwl(IntStream stream) {
         return restOfTheOwl(stream.boxed());
+    }
+
+    public static String restOfTheLongOwl(Stream<Long> stream) {
+        return stream.reduce(UtMath::superOverflowSafeSum)
+                .orElseThrow()
+                .toString();
+    }
+
+    public static String restOfTheLongOwl(LongStream stream) {
+        return restOfTheLongOwl(stream.boxed());
     }
 }
