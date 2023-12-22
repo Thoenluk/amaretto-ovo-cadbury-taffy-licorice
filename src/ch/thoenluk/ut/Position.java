@@ -62,6 +62,13 @@ public record Position(int y, int x) {
         return new Position(this.y + offset.y(), this.x + offset.x());
     }
 
+    public int compareAsCoordinates(final Position other) {
+        if (y() != other.y()) {
+            return y() - other.y();
+        }
+        return x() - other.x();
+    }
+
     public List<Position> offsetBy(List<Position> offsets) {
         final List<Position> offsetPositions = new LinkedList<>();
         for (Position offset : offsets) {

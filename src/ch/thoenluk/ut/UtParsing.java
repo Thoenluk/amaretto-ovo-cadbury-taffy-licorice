@@ -1,5 +1,6 @@
 package ch.thoenluk.ut;
 
+import java.sql.Array;
 import java.util.*;
 
 public class UtParsing {
@@ -57,6 +58,22 @@ public class UtParsing {
         }
 
         return map;
+    }
+
+    public static String[] positionCharacterMapToStringArray(final Map<Position, Character> map) {
+        final List<StringBuilder> stringBuilders = new ArrayList<>();
+        map.keySet().stream()
+                .sorted(Position::compareAsCoordinates)
+                .forEach(coordinate -> {
+                    if (stringBuilders.size() < coordinate.y() + 1) {
+                        stringBuilders.add(new StringBuilder());
+                    }
+                    final StringBuilder stringBuilder = stringBuilders.get(coordinate.y());
+                    stringBuilder.append(map.get(coordinate));
+                });
+        return stringBuilders.stream()
+                .map(StringBuilder::toString)
+                .toArray(String[]::new);
     }
 
     public static Map<Position, Integer> multilineStringToPositionIntegerMap(String stringRepresentation) {
