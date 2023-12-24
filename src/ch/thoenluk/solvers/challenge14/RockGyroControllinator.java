@@ -102,14 +102,6 @@ public class RockGyroControllinator implements ChristmasSaver {
         tiltEast(height, width, dish);
     }
 
-    //65
-    //        63
-    //        68
-    //        69
-    //        69
-    //        65
-    //        64
-
     private void tiltNorth(final int width, final Map<Position, Character> dish) {
         IntStream.range(0, width)
                 .mapToObj(i -> new Position(0, i))
