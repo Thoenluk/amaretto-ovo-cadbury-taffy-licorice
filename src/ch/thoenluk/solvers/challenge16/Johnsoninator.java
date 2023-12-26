@@ -123,6 +123,8 @@ public class Johnsoninator implements ChristmasSaver {
         // from the list of entry points to be explored.
         // However comma, since you already need subpath pruning to prevent infinite loops, my solution returns in 800ms
         // and any solution you can compute is a success.
+        //
+        // Update: This is not true, of course, because splitters are magic and not commutative. CPU go brrrrr
     }
 
     private record Movement(Position from, Position direction) {}
