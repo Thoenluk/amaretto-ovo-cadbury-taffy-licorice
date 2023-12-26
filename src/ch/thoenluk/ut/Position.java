@@ -62,6 +62,10 @@ public record Position(int y, int x) {
         return new Position(this.y + offset.y(), this.x + offset.x());
     }
 
+    public Position offsetByDistance(final Position offset, final int distance) {
+        return new Position(this.y() + offset.y() * distance, this.x() + offset.x() * distance);
+    }
+
     public int compareAsCoordinates(final Position other) {
         if (y() != other.y()) {
             return y() - other.y();
