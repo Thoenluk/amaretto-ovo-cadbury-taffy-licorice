@@ -3,32 +3,31 @@ package ch.thoenluk.solvers.challenge17;
 import ch.thoenluk.ChristmasSaver;
 import ch.thoenluk.ut.Position;
 import ch.thoenluk.ut.UtParsing;
-import ch.thoenluk.ut.UtStrings;
 
 import java.util.*;
 
 public class HeatLossEliminatorinator implements ChristmasSaver {
     @Override
-    public String saveChristmas(String input) {
+    public String saveChristmas(final String input) {
         final Map<Position, Integer> city = UtParsing.multilineStringToPositionIntegerMap(input);
         final Path startingPath = new Path(0, new Position(0, 0), new MovementAllowance(0, 3, 3, 0));
         return calculateShortestPath(startingPath, city);
     }
 
-    private String calculateShortestPath(Path startingPath, Map<Position, Integer> city) {
+    private String calculateShortestPath(final Path startingPath, final Map<Position, Integer> city) {
         final Map<Position, Set<Path>> bestPaths = new HashMap<>();
         final Position goal = city.keySet().stream()
                 .max(Position::compareAsCoordinates)
                 .orElseThrow();
         bestPaths.put(new Position(0, 0), new HashSet<>(Set.of(startingPath)));
-        final List<Path> pathsToExplore = new LinkedList<>();
+        final List<Path> pathsToExplore = new ArrayList<>();
         pathsToExplore.add(startingPath);
 
         while (true) {
             final Path path = pathsToExplore.remove(0);
             pathsToExplore.remove(path);
             final MovementAllowance movementAllowance = path.movementAllowance();
-            for (Position direction : Position.NeighbourDirection.CARDINAL.getDirections()) {
+            for (final Position direction : Position.NeighbourDirection.CARDINAL.getDirections()) {
                 if (movementAllowance.canMoveIn(direction)) {
                     final Position neighbour = path.location().offsetBy(direction);
                     if (!city.containsKey(neighbour)) {
@@ -44,7 +43,11 @@ public class HeatLossEliminatorinator implements ChristmasSaver {
                     bestPathsToNeighbour.removeIf(pathToNeighbour::isBetterThan);
                     final boolean nextToGoal = neighbour.getDistanceFrom(goal) == 1;
                     if (nextToGoal || bestPathsToNeighbour.stream().noneMatch(p -> p.isBetterThan(pathToNeighbour))) {
-                        pathsToExplore.add(pathToNeighbour);
+                        int index = Collections.binarySearch(pathsToExplore, pathToNeighbour, Comparator.comparingInt(Path::cost).thenComparingInt(p -> p.location().getDistanceFrom(goal)));
+                        if (index < 0) {
+                            index = -index - 1;
+                        }
+                        pathsToExplore.add(index, pathToNeighbour);
                         bestPathsToNeighbour.add(pathToNeighbour);
                     }
                 }
@@ -54,7 +57,7 @@ public class HeatLossEliminatorinator implements ChristmasSaver {
     }
 
     @Override
-    public String saveChristmasAgain(String input) {
+    public String saveChristmasAgain(final String input) {
         final Map<Position, Integer> city = UtParsing.multilineStringToPositionIntegerMap(input);
         final Path startingPath = new Path(0, new Position(0, 0), new ULTRAMovementAllowance(0, 10, 10, 0));
         return calculateShortestPath(startingPath, city);
