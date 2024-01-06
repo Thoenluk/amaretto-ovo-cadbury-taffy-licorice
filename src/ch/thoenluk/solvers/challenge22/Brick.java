@@ -10,11 +10,13 @@ public class Brick {
     private ThreeDPosition start;
     private ThreeDPosition end;
     private final Set<Brick> supportingBricks;
+    private final Set<Brick> bricksSupported;
 
     private Brick(final ThreeDPosition start, final ThreeDPosition end) {
         this.start = start;
         this.end = end;
         supportingBricks = new HashSet<>();
+        bricksSupported = new HashSet<>();
     }
 
     public static Brick fromString(final String description) {
@@ -52,6 +54,10 @@ public class Brick {
         return supportingBricks;
     }
 
+    public Set<Brick> getBricksSupported() {
+        return bricksSupported;
+    }
+
     public void fallToZ(final int restingZ) {
         final int fallingDistance = start().z() - restingZ;
         setStart(start().subtract(new ThreeDPosition(0, 0, fallingDistance)));
@@ -68,6 +74,11 @@ public class Brick {
 
     public void findSupport(final Collection<Brick> bricks) {
         supportingBricks.addAll(determineSupportingBricks(bricks));
+        supportingBricks.forEach(brick -> brick.addSupportedBrick(this));
+    }
+
+    private void addSupportedBrick(final Brick brick) {
+        bricksSupported.add(brick);
     }
 
     public Set<Brick> determineSupportingBricks(final Collection<Brick> bricks) {

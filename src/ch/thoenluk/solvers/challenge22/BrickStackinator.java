@@ -12,7 +12,7 @@ public class BrickStackinator implements ChristmasSaver {
     @Override
     public String saveChristmas(final String input) {
         final List<Brick> bricks = getBricks(input);
-        return Long.toString(calculcateSafeBricksGalaxyBrained(bricks));
+        return Long.toString(calculateSafeBricksInfinityBrained(bricks));
     }
 
     private long calculateSafeBricksNaive(final List<Brick> bricks) {
@@ -33,6 +33,20 @@ public class BrickStackinator implements ChristmasSaver {
                 .count(); // This doesn't actually run notably faster; In fact, if getBricks didn't always run
         // brick.findSupport(), it would do the same thing and run in the same time.
         // The joke is that I have preserved the solution for the second challenge.
+    }
+
+    private long calculateSafeBricksInfinityBrained(final List<Brick> bricks) {
+        return bricks.stream()
+                .filter(brick -> {
+                    for (final Brick supportedBrick : brick.getBricksSupported()) {
+                        if (supportedBrick.getSupportingBricks().size() == 1) {
+                            return false;
+                        }
+                    }
+                    return true;
+                })
+                .count();
+        // This is also not any faster. Fixed overhead is a bastard, innit.
     }
 
     private List<Brick> getBricks(final String input) {
@@ -59,8 +73,13 @@ public class BrickStackinator implements ChristmasSaver {
 
     @Override
     public String saveChristmasAgain(final String input) {
+        final long millisAtStart = System.currentTimeMillis();
         final List<Brick> bricks = getBricks(input);
-        return UtMath.restOfTheOwl(bricks.stream().map(brick -> disintegrateRecursivelyGalaxyBrained(bricks, brick)));
+        final long millisAfterBricks = System.currentTimeMillis();
+        UtStrings.println(String.format("Built bricks \"graph\" in %d ms!", millisAfterBricks - millisAtStart));
+        final int disintegratedBricks = bricks.stream().map(this::disintegrateRecursivelyInfinityBrained).reduce(UtMath::overflowSafeSum).orElseThrow();
+        UtStrings.println(String.format("Disintegrated bricks in %d ms!", System.currentTimeMillis() - millisAfterBricks));
+        return Integer.toString(disintegratedBricks);
     }
 
     private int disintegrateRecursivelyNaive(final List<Brick> bricks, final Brick brickToDisintegrate) {
@@ -116,6 +135,25 @@ public class BrickStackinator implements ChristmasSaver {
         // Unfortunately, no one pays me to implement this, so it shall be an exercise to the reader.
         // But hey Education Guild, maybe next year we can all collaborate on an optimised LP solution set?
 
+        return bricksDisintegrated.size() - 1;
+    }
+
+    private int disintegrateRecursivelyInfinityBrained(final Brick brickToDisintegrate) {
+        final Set<Brick> bricksDisintegrated = new HashSet<>();
+        final List<Brick> bricksToDisintegrate = new LinkedList<>(List.of(brickToDisintegrate));
+        while (!bricksToDisintegrate.isEmpty()) {
+            final Brick brick = bricksToDisintegrate.remove(0);
+            bricksDisintegrated.add(brick);
+            for (final Brick fallingBrick : brick.getBricksSupported()) {
+                if (bricksDisintegrated.containsAll(fallingBrick.getSupportingBricks())) {
+                    bricksToDisintegrate.add(fallingBrick);
+                }
+            }
+        }
+        // I did it anyway tee hee.
+        // So I was right that this returns in a double-digit number of ms with no other optimisations: 65ms.
+        // 25ms of that is building the bricks "graph" so we finish the search in 40ms, a hot 31.25 microseconds per
+        // brick (on average; many bricks will be trivial and cause nothing to fall.)
         return bricksDisintegrated.size() - 1;
     }
 }
