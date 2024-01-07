@@ -147,7 +147,6 @@ public class DijsktraBishinator implements ChristmasSaver {
         final Set<Subtree> seenSubtrees = new HashSet<>();
 
         while (!paths.isEmpty()) {
-            UtStrings.println(String.format("Only %d paths to go!", paths.size()));
             final Set<Position> path = paths.pop();
             final Position nextStep = nextSteps.pop();
             final Set<Position> pathAfterStep = new HashSet<>(path);

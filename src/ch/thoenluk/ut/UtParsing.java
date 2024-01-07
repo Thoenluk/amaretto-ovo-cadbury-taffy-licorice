@@ -8,11 +8,11 @@ public class UtParsing {
     private static final Map<String, Long> STRING_LONG_CACHE = new HashMap<>();
     private static final Map<Character, Integer> CHAR_INTEGER_CACHE = new HashMap<>();
 
-    public static int cachedParseInt(String stringRepresentation) {
+    public static int cachedParseInt(final String stringRepresentation) {
         return STRING_INTEGER_CACHE.computeIfAbsent(stringRepresentation, Integer::parseInt);
     }
 
-    public static int cachedParseInt(String stringRepresentation, int radix) {
+    public static int cachedParseInt(final String stringRepresentation, final int radix) {
         if (!STRING_INTEGER_CACHE.containsKey(stringRepresentation)) {
             STRING_INTEGER_CACHE.put(stringRepresentation, Integer.parseInt(stringRepresentation, radix));
         }
@@ -20,11 +20,11 @@ public class UtParsing {
         return STRING_INTEGER_CACHE.get(stringRepresentation);
     }
 
-    public static long cachedParseLong(String stringRepresentation) {
+    public static long cachedParseLong(final String stringRepresentation) {
         return STRING_LONG_CACHE.computeIfAbsent(stringRepresentation, Long::parseLong);
     }
 
-    public static long cachedParseLong(String stringRepresentation, int radix) {
+    public static long cachedParseLong(final String stringRepresentation, final int radix) {
         if (!STRING_LONG_CACHE.containsKey(stringRepresentation)) {
             STRING_LONG_CACHE.put(stringRepresentation, Long.parseLong(stringRepresentation, radix));
         }
@@ -32,24 +32,24 @@ public class UtParsing {
         return STRING_LONG_CACHE.get(stringRepresentation);
     }
 
-    public static int cachedGetNumericValue(char charRepresentation) {
+    public static int cachedGetNumericValue(final char charRepresentation) {
         return CHAR_INTEGER_CACHE.computeIfAbsent(charRepresentation, Character::getNumericValue);
     }
 
-    public static List<Integer> multilineStringToIntegerList(String stringRepresentation) {
-        String[] lines = UtStrings.splitMultilineString(stringRepresentation);
-        List<Integer> parsedList = new ArrayList<>(lines.length);
-        for (String line : lines) {
+    public static List<Integer> multilineStringToIntegerList(final String stringRepresentation) {
+        final String[] lines = UtStrings.splitMultilineString(stringRepresentation);
+        final List<Integer> parsedList = new ArrayList<>(lines.length);
+        for (final String line : lines) {
             parsedList.add(cachedParseInt(line));
         }
         return parsedList;
     }
 
-    public static Map<Position, Character> multilineStringToPositionCharacterMap(String stringRepresentation) {
-        Map<Position, Character> map = new HashMap<>();
+    public static Map<Position, Character> multilineStringToPositionCharacterMap(final String stringRepresentation) {
+        final Map<Position, Character> map = new HashMap<>();
         int y, x;
 
-        String[] lines = UtStrings.splitMultilineString(stringRepresentation);
+        final String[] lines = UtStrings.splitMultilineString(stringRepresentation);
 
         for (y = 0; y < lines.length; y++) {
             for (x = 0; x < lines[y].length(); x++) {
@@ -76,11 +76,11 @@ public class UtParsing {
                 .toArray(String[]::new);
     }
 
-    public static Map<Position, Integer> multilineStringToPositionIntegerMap(String stringRepresentation) {
-        Map<Position, Integer> map = new HashMap<>();
+    public static Map<Position, Integer> multilineStringToPositionIntegerMap(final String stringRepresentation) {
+        final Map<Position, Integer> map = new HashMap<>();
         int y, x;
 
-        String[] lines = UtStrings.splitMultilineString(stringRepresentation);
+        final String[] lines = UtStrings.splitMultilineString(stringRepresentation);
 
         for (y = 0; y < lines.length; y++) {
             for (x = 0; x < lines[y].length(); x++) {
@@ -91,16 +91,23 @@ public class UtParsing {
         return map;
     }
 
-    public static List<Integer> commaSeparatedStringToIntegerList(String csv) {
-        String[] tokens = UtStrings.splitCommaSeparatedString(csv);
-        List<Integer> parsedList = new ArrayList<>();
-        for (String token : tokens) {
+    public static List<Integer> commaSeparatedStringToIntegerList(final String csv) {
+        final String[] tokens = UtStrings.splitCommaSeparatedString(csv);
+        final List<Integer> parsedList = new ArrayList<>();
+        for (final String token : tokens) {
             parsedList.add(cachedParseInt(token));
         }
         return parsedList;
     }
 
-    public static List<Long> whitespaceSeparatedStringToLongList(String wss) {
+    public static List<Long> commaSeparatedStringToLongList(final String csv) {
+        return Arrays.stream(UtStrings.splitCommaSeparatedString(csv))
+                .map(String::trim)
+                .map(UtParsing::cachedParseLong)
+                .toList();
+    }
+
+    public static List<Long> whitespaceSeparatedStringToLongList(final String wss) {
         return Arrays.stream(wss.split(UtStrings.WHITE_SPACE_REGEX))
                 .map(UtParsing::cachedParseLong)
                 .toList();
